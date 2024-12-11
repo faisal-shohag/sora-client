@@ -33,11 +33,13 @@ const ProtectedRoute = ({ allowedRoles, children }) => {
     }
   }
 
-  if(children.type.name === 'Home' && user.role !== 'admin'){
+
+
+  if(children.type.name === 'Home' && user.role === 'user'){
     return <Navigate to="/lessons" replace />;
   }
 
-  if(children.type.name === 'Home' && user.role !== 'user'){
+  if(children.type.name === 'Home' && user.role === 'admin'){
     return <Navigate to="/dashboard" replace />;
   }
   
