@@ -47,7 +47,7 @@ const Signup = () => {
     //   });
     //   console.log(response);
       
-     const response = await axios.post('https://sora-vocab.vercel.app/auth/signup', data, {withCredentials: true})
+     const response = await axios.post('https://sora-server.vercel.app/auth/signup', data, {withCredentials: true})
      console.log(response)
       // Show success toast
       toast.success(response.data?.message || "Signed up successfully", { id: "signup" });
