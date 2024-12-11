@@ -1,9 +1,6 @@
 import { createContext, useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
-
 
 export const AuthContext = createContext();
 
@@ -11,23 +8,14 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null); // Holds user data
   const [loading, setLoading] = useState(true); // Manages loading state
   const axiosSecure = useAxiosSecure()
-  const navigate = useNavigate()
 
-  const saveToken = (token) => {
-    Cookies.set('jwt_token', token, { expires: 1 }); 
-  };
 
-  const removeToken = () => {
-    Cookies.remove('jwt_token');
-  };
 
   // Function to log in the user
   const login = async (email, password) => {
     toast.loading("Loging in...", { id: "login" });
     try {
       const response = await axiosSecure.post(`/auth/login`, { email, password });
-      const { token, user } = response.data;
-      saveToken(token);
       setUser(user);
       toast.success(response.data?.message || "Logged in successfully", { id: "login" });
     } catch (error) {
@@ -50,8 +38,6 @@ const AuthProvider = ({ children }) => {
         avatar,
       });
       console.log(response.data);
-      const { token, user } = response.data;
-      saveToken(token);
       setUser(user);
       toast.success(response.data?.message || "Signed up successfully", { id: "signup" });
     } catch (error) {
@@ -64,7 +50,6 @@ const AuthProvider = ({ children }) => {
   const logout = () => {
     axiosSecure.post('/auth/logout')
     .then(() => {
-      removeToken();
       setUser(null);
     })
     .catch(error => {
