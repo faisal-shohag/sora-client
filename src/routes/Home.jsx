@@ -1,15 +1,16 @@
-import useAxiosSecure from "@/hooks/useAxiosSecure";
-import { useEffect } from "react";
+
+import useAuth from "@/hooks/useAuth";
 
 const Home = () => {
-    const axiosSecure = useAxiosSecure()
-   useEffect(()=>{
-    axiosSecure.get('/find')
-    .then(res=>console.log(res))
-   },[axiosSecure])
+
+    const {user} = useAuth() 
+
     return (
         <div>
             Home
+           {user?.name}
+           <img src={user.avatar}/>
+            
         </div>
     );
 };

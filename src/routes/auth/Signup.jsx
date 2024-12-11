@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -6,24 +7,29 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import toast from 'react-hot-toast';
-import useAxiosSecure from '@/hooks/useAxiosSecure';
+import useAuth from '@/hooks/useAuth';
+import PhotoUpload from './PhotoUpload';
+import ImageKit from "imagekit";
+import { useNavigate } from 'react-router-dom';
 
-// Zod validation schema
 const signupSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.string().email({ message: "Invalid email address" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" })
-//   password: z.string()
-//     .min(8, { message: "Password must be at least 8 characters" })
-//     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, {
-//       message: "Password must include uppercase, lowercase, number, and special character"
-//     })
 });
 
 const Signup = () => {
-  const axiosSecure = useAxiosSecure()
+  const { signup, user } = useAuth();
+  const navigate = useNavigate()
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState(null);
 
-  // Initialize the form with react-hook-form and zod resolver
+  const imageKit = new ImageKit({
+    publicKey: "public_Vh5nLR3Jrm4T8zA+77I+lh7nZSY=",
+    privateKey: "private_NmXzE7tSS12GF17YPjVqGuEolgM=",
+    urlEndpoint: "https://ik.imagekit.io/britto",
+  });
+
   const form = useForm({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -35,35 +41,61 @@ const Signup = () => {
 
   // Handle form submission
   const onSubmit = async (data) => {
-    toast.loading("Signing up...", { id: "signup" });
-    try {
-        console.log(data);
-      // Attempt to register the user
-    //   const response = await fetch(`${import.meta.env.VITE_API_URL}auth/signup`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(data),
-    //   });
-    //   console.log(response);
-      
-     const response = await axiosSecure.post('/auth/signup', data)
-     console.log(response)
-      // Show success toast
-      toast.success(response.data?.message || "Signed up successfully", { id: "signup" });
+    // Check if photo is selected before allowing signup
+    if (!avatarFile) {
+      toast.error("Please select a profile picture before creating an account");
+      return;
+    }
 
-      // Optional: Redirect or perform additional actions
-      // router.push('/login');
+    toast.loading("Please wait...", { id: "signup" });
+    try {
+      // Upload photo first
+      const reader = new FileReader();
+      reader.readAsDataURL(avatarFile);
+      
+      reader.onloadend = async () => {
+        try {
+          const fileName = `profile_${Date.now()}`;
+          const uploadResponse = await imageKit.upload({
+            file: reader.result,
+            fileName: fileName,
+            folder: "/profile_images"
+          });
+
+          // Signup with uploaded avatar URL
+          await signup(
+            data.name, 
+            data.email, 
+            data.password, 
+            uploadResponse.url
+          );
+
+          // toast.dismiss("signup");
+        } catch (error) {
+          console.log(error);
+          toast.error("Signup failed", { id: "signup" });
+        }
+      };
     } catch (error) {
-        console.log(error);
-      // Handle signup errors
-      toast.error(error.response?.data?.error || "Signup failed", { id: "signup" });
+      console.log(error);
+      toast.error("Error uploading profile picture", { id: "signup" });
     }
   };
 
+  // Function to handle photo selection
+  const handlePhotoSelect = (file, preview) => {
+    setAvatarFile(file);
+    setAvatarPreview(preview);
+  };
+
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate])
+
   return (
-    <div className="flex justify-center items-center min-h-screen  p-4">
+    <div className="flex justify-center items-center min-h-screen p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Create an Account</CardTitle>
@@ -76,7 +108,7 @@ const Signup = () => {
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex-grow">
                     <FormLabel>Name</FormLabel>
                     <FormControl>
                       <Input placeholder="Your full name" {...field} />
@@ -84,6 +116,12 @@ const Signup = () => {
                     <FormMessage />
                   </FormItem>
                 )}
+              />
+
+              <PhotoUpload 
+                aspectRatio={1} 
+                onPhotoSelect={handlePhotoSelect}
+                initialPreview={avatarPreview}
               />
               
               <FormField
@@ -122,7 +160,11 @@ const Signup = () => {
                 )}
               />
               
-              <Button type="submit" className="w-full">
+              <Button 
+                type="submit" 
+                className="w-full" 
+                disabled={!avatarFile}
+              >
                 Create Account
               </Button>
             </form>
