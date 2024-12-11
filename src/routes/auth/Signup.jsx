@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import toast from 'react-hot-toast';
-import useAxiosSecure from '@/hooks/useAxiosSecure';
+import axios from 'axios';
 
 // Zod validation schema
 const signupSchema = z.object({
@@ -21,7 +21,6 @@ const signupSchema = z.object({
 });
 
 const Signup = () => {
-  const axiosSecure = useAxiosSecure()
 
   // Initialize the form with react-hook-form and zod resolver
   const form = useForm({
@@ -48,7 +47,7 @@ const Signup = () => {
     //   });
     //   console.log(response);
       
-     const response = await axiosSecure.post('/auth/signup', data)
+     const response = await axios.post('https://sora-vocab.vercel.app/auth/signup', data, {withCredentials: true})
      console.log(response)
       // Show success toast
       toast.success(response.data?.message || "Signed up successfully", { id: "signup" });
