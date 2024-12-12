@@ -16,9 +16,11 @@ import AddVocabularies from "./routes/admin/add-vocabularies";
 import ManageUsers from "./routes/admin/manage-users";
 import LessonManagement from "./routes/admin/lesson-management";
 import VocabularyManagement from "./routes/admin/vocabulary-management";
+import ReactQueryProvider from "./providers/ReactQueryProvider";
 
 function App() {
   return (
+    <ReactQueryProvider>
     <AuthProvider>
       <NavBar />
       <Routes>
@@ -69,6 +71,7 @@ function App() {
         </Route>
       </Routes>
     </AuthProvider>
+    </ReactQueryProvider>
   );
 }
 
