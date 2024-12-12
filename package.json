@@ -39,6 +39,7 @@
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^7.0.2",
     "react-use": "^17.6.0",
+    "recharts": "^2.14.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.0"

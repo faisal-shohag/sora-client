@@ -37,31 +37,29 @@ const ManageUsers = () => {
   const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false);
   const axiosSecure = useAxiosSecure();
 
-  // Fetch Users
+ 
   const fetchUsers = async () => {
     const { data } = await axiosSecure.get('/admin/users');
     return data;
   };
 
-  // Update User Role
   const updateUserRoleMutation = async ({ userId, newRole }) => {
     const { data } = await axiosSecure.patch(`/admin/users/${userId}/role`, { role: newRole });
     return data;
   };
 
-  // Delete User
   const deleteUserMutation = async (userId) => {
     const { data } = await axiosSecure.delete(`/admin/users/${userId}`);
     return data;
   };
 
-  // Users Query
+
   const { data: users, isLoading, error } = useQuery({
     queryKey: ['users'],
     queryFn: fetchUsers
   });
 
-  // Update Role Mutation
+ 
   const updateRoleMutation = useMutation({
     mutationFn: updateUserRoleMutation,
     onSuccess: () => {
@@ -75,7 +73,6 @@ const ManageUsers = () => {
     }
   });
 
-  // Delete User Mutation
   const deleteMutation = useMutation({
     mutationFn: deleteUserMutation,
     onSuccess: () => {
@@ -101,7 +98,6 @@ const ManageUsers = () => {
   if (isLoading) return <div>Loading users...</div>;
   if (error) return <div>Error fetching users</div>;
 
-  console.log(users)
   return (
     <div className="p-4">
       <div className="mb-4">
@@ -180,7 +176,6 @@ const ManageUsers = () => {
         </TableBody>
       </Table>
 
-      {/* Role Update Dialog */}
       <Dialog open={isRoleDialogOpen} onOpenChange={setIsRoleDialogOpen}>
         <DialogContent>
           <DialogHeader>

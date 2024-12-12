@@ -45,44 +45,31 @@ const LessonManagement = () => {
   const axiosSecure = useAxiosSecure()
 
 
-
-
-
-  
-// Fetch Lessons
 const fetchLessons = async () => {
-   
+  
   const { data } = await axiosSecure.get('/admin/lessons-with-vocabulary');
-    console.log(data);
   return data;
 };
 
-// Create/Update Lesson
 const saveLessonMutation = async (lesson) => {
   if (lesson._id) {
-    // Update existing lesson
     const { data } = await axiosSecure.put(`/admin/lessons/${lesson._id}`, lesson);
     return data;
   } else {
-    // Create new lesson
     const { data } = await axiosSecure.post('/admin/lessons', lesson);
     return data;
   }
 };
 
-// Delete Lesson
 const deleteLessonMutation = async (lessonId) => {
   const { data } = await axiosSecure.delete(`/admin/lessons/${lessonId}`);
   return data;
 };
-
-  // Fetch Lessons Query
   const { data: lessons, isLoading, error } = useQuery({
     queryKey: ['lessons'],
     queryFn: fetchLessons
   });
 
-  // Create/Update Lesson Mutation
   const saveMutation = useMutation({
     mutationFn: saveLessonMutation,
     onSuccess: () => {
@@ -97,7 +84,6 @@ const deleteLessonMutation = async (lessonId) => {
     }
   });
 
-  // Delete Lesson Mutation
   const deleteMutation = useMutation({
     mutationFn: deleteLessonMutation,
     onSuccess: () => {

@@ -17,6 +17,9 @@ import LessonManagement from "./routes/admin/lesson-management";
 import VocabularyManagement from "./routes/admin/vocabulary-management";
 import LessonPage from "./routes/user/lesson/lesson-page";
 import TutorialManagement from "./routes/admin/tutorial-management";
+import NotFound from "./routes/not-found";
+import Footer from "./components/common/footer";
+import MobileNav from "./components/common/mobilenav";
 
 function App() {
   return (
@@ -80,7 +83,13 @@ function App() {
           <Route path="vocabulary-management" element={<VocabularyManagement />} />
           <Route path="tutorial-management" element={<TutorialManagement />} />
         </Route>
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
+     <div className="lg:hdden md:hidden block">
+     <MobileNav/>
+     </div>
+      <Footer/>
       </>
   );
 }

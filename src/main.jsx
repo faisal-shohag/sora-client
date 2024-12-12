@@ -10,15 +10,16 @@ import AuthProvider from "./providers/AuthProvider";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-        <ReactQueryProvider>
-        <AuthProvider>
-    <ThemeProvider>
-      <Toaster/>
+    <ReactQueryProvider>
       <BrowserRouter>
-        <App />
+        <AuthProvider>
+          <ThemeProvider>
+            <Toaster />
+
+            <App />
+          </ThemeProvider>
+        </AuthProvider>
       </BrowserRouter>
-    </ThemeProvider>
-    </AuthProvider>
     </ReactQueryProvider>
   </StrictMode>
 );

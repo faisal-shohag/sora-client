@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import useAuth from '@/hooks/useAuth';
 import PhotoUpload from './PhotoUpload';
 import ImageKit from "imagekit";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const signupSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
@@ -95,8 +95,15 @@ const Signup = () => {
   }, [user, navigate])
 
   return (
-    <div className="flex justify-center items-center min-h-screen p-4">
-      <Card className="w-full max-w-md">
+    <div className='flex flex-col justify-center items-center  min-h-screen'>
+   <div>
+    <h1 className='text-4xl font-bold text-center'>~<span className='text-red-500'>日本</span>~ Learn</h1>
+    <p className='text-center'>A Japanese Vocabulary Learning Application</p>
+   </div>
+   
+
+    <div className="flex justify-center items-center p-4">
+      <Card className="min-w-[420px]">
         <CardHeader>
           <CardTitle>Create an Account</CardTitle>
           <CardDescription>Sign up to start your journey</CardDescription>
@@ -159,7 +166,12 @@ const Signup = () => {
                   </FormItem>
                 )}
               />
-              
+
+              <div>
+              <Link to="/login" className="text-sm text-gray-600 hover:text-gray-800">
+                Already have an account? Login
+              </Link>
+              </div>
               <Button 
                 type="submit" 
                 className="w-full" 
@@ -171,6 +183,7 @@ const Signup = () => {
           </Form>
         </CardContent>
       </Card>
+    </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,28 +13,23 @@ import useAuth from "@/hooks/useAuth";
 
 const NavBar = () => {
   const { user, logout } = useAuth();
+  const location = useLocation()
 
   const handleLogOut = () => {
     logout();
   };
 
   if (user && user.role === "admin") return null;
+  if (location.pathname === "/login" || location.pathname === "/signup") return null;
 
   return (
     <div className="border Nav p-3 shadow-lg flex gap-5 lg:px-[100px]  justify-between items-center">
       <div className="animate-pulse">
-        <img
-          className="h-8 w-8"
-          src="https://i.postimg.cc/XYSGZD9T/logo.png"
-          alt="logo"
-        />
+      <h1 className='text-xl font-bold text-center'>~<span className='text-red-500'>日本</span>~ Learn</h1>
       </div>
 
       <div className="lg:block md:block hidden">
         <div className="flex items-center gap-10">
-          <NavLink to="/">
-            <span>Home</span>
-          </NavLink>
           <NavLink to="/lessons">
             <span>Lessons</span>
           </NavLink>
@@ -43,9 +38,7 @@ const NavBar = () => {
           </NavLink>
         </div>
       </div>
-      <div className="block font-black text-xl lg:hidden md:hidden bg-gradient-to-r from-blue-600 via-purple-500 to-indigo-400  text-transparent bg-clip-text">
-        ContestHUB
-      </div>
+  
       <div className="flex gap-4 items-center">
         {!user ? (
           <>

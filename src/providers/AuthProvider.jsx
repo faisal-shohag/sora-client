@@ -5,19 +5,19 @@ import toast from 'react-hot-toast';
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // Holds user data
-  const [loading, setLoading] = useState(true); // Manages loading state
+  const [user, setUser] = useState(null); 
+  const [loading, setLoading] = useState(true); 
   const axiosSecure = useAxiosSecure()
-
-
-
-  // Function to log in the user
+  
   const login = async (email, password) => {
     toast.loading("Loging in...", { id: "login" });
     try {
       const response = await axiosSecure.post(`/auth/login`, { email, password });
       setUser(user);
       toast.success(response.data?.message || "Logged in successfully", { id: "login" });
+      setTimeout(() => {
+        window.location.reload()
+      }, 1200);
     } catch (error) {
         toast.error(error.response?.data?.error || "Login failed", { id: "login" });
       console.error('Login error:', error.response?.data?.message || error.message);
@@ -25,9 +25,8 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // Function to register the user
+
   const signup = async (name, email, password, avatar) => {
-    // toast.loading("Signing up...", { id: "signup" });
     console.log({name, email, password, avatar});
     console.log("Signup called");
     try {
@@ -37,9 +36,11 @@ const AuthProvider = ({ children }) => {
         password,
         avatar,
       });
-      console.log(response.data);
       setUser(user);
       toast.success(response.data?.message || "Signed up successfully", { id: "signup" });
+      setTimeout(() => {
+        window.location.reload()
+      }, 1200);
     } catch (error) {
         toast.error(error.response?.data?.error || "Signup failed", { id: "signup" });
       console.error('Registration error:', error.response?.data?.message || error.message);
@@ -60,7 +61,6 @@ const AuthProvider = ({ children }) => {
   const fetchCurrentUser = async () => {
     try {
       const response = await axiosSecure.get('/user');
-      // console.log(response.data);
       setUser(response.data.user);
     } catch (error) {
       console.error('Error fetching user:', error.response?.data?.message || error.message);
@@ -73,6 +73,8 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     fetchCurrentUser();
   }, []);
+
+
 
   return (
     <AuthContext.Provider

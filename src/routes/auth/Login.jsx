@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -40,8 +40,17 @@ const navigate = useNavigate();
   }, [user, navigate])
 
   return (
-    <div className="flex justify-center items-center min-h-screen  p-4">
-      <Card className="w-full max-w-md">
+    <>
+   <div className='flex flex-col justify-center items-center  min-h-screen'>
+   <div>
+    <h1 className='text-4xl font-bold text-center'>~<span className='text-red-500'>日本</span>~ Learn</h1>
+    <p className='text-center'>A Japanese Vocabulary Learning Application</p>
+   </div>
+   
+
+    <div className="flex justify-center items-center p-4">
+      
+      <Card className="min-w-[400px]">
         <CardHeader>
           <CardTitle>Log in</CardTitle>
           <CardDescription>Welcome back!</CardDescription>
@@ -86,6 +95,12 @@ const navigate = useNavigate();
                   </FormItem>
                 )}
               />
+
+            <div>
+            <Link to="/signup" className="text-sm  text-gray-00 hover:text-gray-600">
+                Don&apos;t have an account? Sign up
+              </Link>
+            </div>
               
               <Button type="submit" className="w-full">
                 Login
@@ -95,6 +110,8 @@ const navigate = useNavigate();
         </CardContent>
       </Card>
     </div>
+    </div>
+    </>
   );
 };
 
