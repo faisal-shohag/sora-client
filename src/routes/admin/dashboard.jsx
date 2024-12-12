@@ -1,15 +1,15 @@
-import { Button } from "@/components/ui/button";
-import useAuth from "@/hooks/useAuth";
-
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'
 const Dashboard = () => {
-    const {logout} = useAuth()
+    const navigate = useNavigate();
 
+    useEffect(() => {
+        navigate('/dashboard/lessons')
+    }, [navigate])
+    
     return (
         <div>
-
-
-            Admin Dashboard
-            <Button onClick={logout}>Logout</Button>
+          
         </div>
     );
 };
