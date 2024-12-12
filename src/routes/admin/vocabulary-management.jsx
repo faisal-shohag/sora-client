@@ -45,13 +45,11 @@ const VocabularyManagement = () => {
   const [lessonFilter, setLessonFilter] = useState(null);
   const axiosSecure = useAxiosSecure();
 
-  // Fetch Lessons for Lesson Number Dropdown
   const fetchLessons = async () => {
     const { data } = await axiosSecure.get('/admin/lessons');
     return data;
   };
 
-  // Fetch Vocabularies with Optional Lesson Filtering
   const fetchVocabularies = async () => {
     const url = lessonFilter 
       ? `/admin/vocabularies?lessonNo=${lessonFilter}` 
@@ -60,38 +58,29 @@ const VocabularyManagement = () => {
     return data;
   };
 
-  // Create/Update Vocabulary
   const saveVocabularyMutation = async (vocabulary) => {
     if (vocabulary._id) {
-      // Update existing vocabulary
       const { data } = await axiosSecure.put(`/admin/vocabularies/${vocabulary._id}`, vocabulary);
       return data;
     } else {
-      // Create new vocabulary
       const { data } = await axiosSecure.post('/admin/vocabularies', vocabulary);
       return data;
     }
   };
 
-  // Delete Vocabulary
   const deleteVocabularyMutation = async (vocabularyId) => {
     const { data } = await axiosSecure.delete(`/admin/vocabularies/${vocabularyId}`);
     return data;
   };
-
-  // Fetch Lessons Query
   const { data: lessons } = useQuery({
     queryKey: ['lessons'],
     queryFn: fetchLessons
   });
-
-  // Fetch Vocabularies Query
   const { data: vocabularies, isLoading, error } = useQuery({
     queryKey: ['vocabularies', lessonFilter],
     queryFn: fetchVocabularies
   });
 
-  // Create/Update Vocabulary Mutation
   const saveMutation = useMutation({
     mutationFn: saveVocabularyMutation,
     onSuccess: () => {
@@ -106,7 +95,6 @@ const VocabularyManagement = () => {
     }
   });
 
-  // Delete Vocabulary Mutation
   const deleteMutation = useMutation({
     mutationFn: deleteVocabularyMutation,
     onSuccess: () => {
@@ -124,7 +112,6 @@ const VocabularyManagement = () => {
     saveMutation.mutate(editingVocabulary);
   };
 
-  // Reset lesson filter
   const handleResetFilter = () => {
     setLessonFilter(null);
   };
@@ -137,7 +124,6 @@ const VocabularyManagement = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Vocabulary Management</h1>
         <div className="flex items-center space-x-2">
-          {/* Lesson Filter */}
           <Select 
             value={lessonFilter?.toString() || ''} 
             onValueChange={(value) => setLessonFilter(value ? parseInt(value) : null)}

@@ -10,7 +10,7 @@ import useAxiosSecure from '@/hooks/useAxiosSecure';
 import toast from 'react-hot-toast';
 import useAuth from '@/hooks/useAuth';
 
-// Initial form state
+
 const initialFormState = {
   word: '',
   pronunciation: '',
@@ -25,7 +25,7 @@ const AddVocabularies = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  // Fetch lessons
+
   const { data: lessons = [], isLoading: isLoadingLessons } = useQuery({
     queryKey: ['lessons'],
     queryFn: async () => {
@@ -34,30 +34,24 @@ const AddVocabularies = () => {
     }
   });
 
-  // Mutation for adding vocabulary
+ 
   const addVocabularyMutation = useMutation({
     mutationFn: async (vocabularyData) => {
       const response = await axiosSecure.post('/admin/vocabularies', vocabularyData);
       return response.data;
     },
     onSuccess: (newVocabulary) => {
-      // Invalidate and refetch vocabularies query
       queryClient.invalidateQueries(['vocabularies']);
-      
-      // Reset form
       setFormData(initialFormState);
-      
-      // Show success toast
       toast.success(`Vocabulary - (${newVocabulary.word}) Added Successfully`);
     },
     onError: (error) => {
       console.log(error);
-      // Show error toast
       toast.error('Failed to Add Vocabulary');
     }
   });
 
-  // Handle input changes
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -66,7 +60,7 @@ const AddVocabularies = () => {
     }));
   };
 
-  // Handle lesson number selection
+
   const handleLessonSelect = (value) => {
     setFormData(prev => ({
       ...prev,
@@ -74,29 +68,23 @@ const AddVocabularies = () => {
     }));
   };
 
-  // Handle form submission
+
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Validate inputs
     if (!formData.word || !formData.pronunciation || !formData.meaning || !formData.whenToSay || !formData.lessonNo) {
       toast.error('Please fill in all fields');
       return;
     }
-
-    // Check if user is authenticated
     if (!user || !user.email) {
       toast.error('You must be logged in to add vocabularies');
       return;
     }
-
-    // Prepare submission data
     const submissionData = {
       ...formData,
       adminEmail: user.email
-    };
-
-    // Trigger mutation
+    }
+    
     addVocabularyMutation.mutate(submissionData);
   };
 

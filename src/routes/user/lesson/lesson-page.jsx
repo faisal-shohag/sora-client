@@ -17,11 +17,11 @@ const LessonPage = () => {
   const [isLessonCompleted, setIsLessonCompleted] = useState(false);
   const [countdown, setCountdown] = useState(5);
 
-  // Audio refs
+ 
   const correctSoundRef = useRef(new Audio('/audio/correct-sound-effect.mp3'));
   const lessonCompleteSoundRef = useRef(new Audio('/audio/lesson-complete-sound-effect.mp3'));
 
-  // Fetch vocabularies for the specific lesson
+
   const { 
     data, 
     isLoading, 
@@ -37,7 +37,7 @@ const LessonPage = () => {
     keepPreviousData: true
   });
 
-  // Navigation handlers
+
   const handleNext = () => {
     correctSoundRef.current.play();
     
@@ -55,9 +55,9 @@ const LessonPage = () => {
     }
   };
 
-  // Lesson completion handler
+
   const handleLessonCompletion = () => {
-    setCountdown(0); // This will trigger the redirection immediately
+    setCountdown(0); 
   };
 
   useEffect(() => {
@@ -72,14 +72,12 @@ const LessonPage = () => {
     }
   }, [isLessonCompleted, countdown]);
 
-  // Text-to-speech function
   const speakWord = (word) => {
     const utterance = new SpeechSynthesisUtterance(word);
     utterance.lang = 'ja-JP'
     window.speechSynthesis.speak(utterance);
   };
 
-  // Loading state
   if (isLoading) return (
     <div className="container mx-auto p-6 max-w-2xl">
       <Card className="overflow-hidden shadow-lg">
@@ -105,7 +103,7 @@ const LessonPage = () => {
     </div>
   );
   
-  // Error state
+
   if (isError) return (
     <div className="container mx-auto p-6 max-w-2xl">
       <Card className="overflow-hidden shadow-lg">
@@ -125,7 +123,7 @@ const LessonPage = () => {
     </div>
   );
   
-  // No vocabularies found state
+  
   if (!data || !data.vocabularies || data.vocabularies.length === 0) return (
     <div className="container mx-auto p-6 max-w-2xl">
       <Card className="overflow-hidden shadow-lg">
@@ -145,7 +143,7 @@ const LessonPage = () => {
     </div>
   );
 
-  // Get current vocabulary
+  
   const currentVocabulary = data.vocabularies[0];
   const progress = (currentPage / data.totalPages) * 100;
 

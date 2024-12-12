@@ -13,7 +13,6 @@ const TutorialPage = () => {
   const axiosSecure = useAxiosSecure();
   const [selectedTutorial, setSelectedTutorial] = useState(null);
 
-  // Function to extract YouTube video ID from URL
   const getYouTubeEmbedUrl = (url) => {
     const videoId = url.split('v=')[1]?.split('&')[0];
     return videoId 
@@ -21,7 +20,7 @@ const TutorialPage = () => {
       : null;
   };
 
-  // Fetch Tutorials
+
   const fetchTutorials = async () => {
     const { data } = await axiosSecure.get('/api/tutorials');
     return data;

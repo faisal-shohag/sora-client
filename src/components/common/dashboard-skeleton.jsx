@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 export const DashboardSkeleton = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
-      {/* Overview Card Skeletons */}
       {[1, 2, 3, 4].map(item => (
         <Card key={item}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -16,8 +15,6 @@ export const DashboardSkeleton = () => {
           </CardContent>
         </Card>
       ))}
-
-      {/* Recent Users Skeleton */}
       <Card className="col-span-full md:col-span-2">
         <CardHeader>
           <Skeleton className="h-6 w-40" />
@@ -35,7 +32,6 @@ export const DashboardSkeleton = () => {
         </CardContent>
       </Card>
 
-      {/* Chart Skeleton */}
       <Card className="col-span-full md:col-span-2">
         <CardHeader>
           <Skeleton className="h-6 w-40" />

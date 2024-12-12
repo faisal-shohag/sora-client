@@ -37,38 +37,31 @@ const TutorialManagement = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const axiosSecure = useAxiosSecure();
 
-  // Fetch Tutorials
   const fetchTutorials = async () => {
     const { data } = await axiosSecure.get('/admin/tutorials');
     return data;
   };
 
-  // Create/Update Tutorial
   const saveTutorialMutation = async (tutorial) => {
     if (tutorial._id) {
-      // Update existing tutorial
       const { data } = await axiosSecure.put(`/admin/tutorials/${tutorial._id}`, tutorial);
       return data;
     } else {
-      // Create new tutorial
       const { data } = await axiosSecure.post('/admin/tutorials', tutorial);
       return data;
     }
   };
 
-  // Delete Tutorial
   const deleteTutorialMutation = async (tutorialId) => {
     const { data } = await axiosSecure.delete(`/admin/tutorials/${tutorialId}`);
     return data;
   };
 
-  // Fetch Tutorials Query
   const { data: tutorials, isLoading, error } = useQuery({
     queryKey: ['tutorials'],
     queryFn: fetchTutorials
   });
 
-  // Create/Update Tutorial Mutation
   const saveMutation = useMutation({
     mutationFn: saveTutorialMutation,
     onSuccess: () => {
@@ -82,8 +75,6 @@ const TutorialManagement = () => {
       toast.error('Error adding tutorial.');
     }
   });
-
-  // Delete Tutorial Mutation
   const deleteMutation = useMutation({
     mutationFn: deleteTutorialMutation,
     onSuccess: () => {
