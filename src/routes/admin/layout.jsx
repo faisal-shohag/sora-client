@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { ModeToggle } from "@/components/common/ThemeToggle";
 
 export default function Layout() {
-  // Use useLocation hook to get the current pathname
+ 
   const location = useLocation();
   const pathname = location.pathname;
 
@@ -23,7 +23,6 @@ export default function Layout() {
     "/dashboard/vocabulary-management": "Vocabulary Management",
   }
 
-  // Fallback to pathname if exact match not found
   const pageTitle = path[pathname] || pathname.split('/').pop()?.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()) || "Dashboard";
 
   return (

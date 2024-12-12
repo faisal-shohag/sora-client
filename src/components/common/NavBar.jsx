@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LayoutDashboard, LogOutIcon } from "lucide-react";
+import { LogOutIcon } from "lucide-react";
 import { ModeToggle } from "./ThemeToggle";
 import useAuth from "@/hooks/useAuth";
 
@@ -63,10 +63,8 @@ const NavBar = () => {
               <DropdownMenuContent>
                 <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <LayoutDashboard className="mr-2 h-4 w-4" />
-                  <span>Dashboard</span>
-                </DropdownMenuItem>
+                
+
                 <DropdownMenuItem
                   className="text-red-500"
                   onClick={handleLogOut}

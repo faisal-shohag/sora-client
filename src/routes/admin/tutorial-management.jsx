@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   Table, 
@@ -31,127 +31,120 @@ import {
 import toast from 'react-hot-toast';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
 
-
-
-const LessonManagement = () => {
-
-
-
-
-
+const TutorialManagement = () => {
   const queryClient = useQueryClient();
-  const [editingLesson, setEditingLesson] = useState(null);
+  const [editingTutorial, setEditingTutorial] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const axiosSecure = useAxiosSecure()
+  const axiosSecure = useAxiosSecure();
 
-
-
-
-
-  
-// Fetch Lessons
-const fetchLessons = async () => {
-   
-  const { data } = await axiosSecure.get('/admin/lessons-with-vocabulary');
-    console.log(data);
-  return data;
-};
-
-// Create/Update Lesson
-const saveLessonMutation = async (lesson) => {
-  if (lesson._id) {
-    // Update existing lesson
-    const { data } = await axiosSecure.put(`/admin/lessons/${lesson._id}`, lesson);
+  // Fetch Tutorials
+  const fetchTutorials = async () => {
+    const { data } = await axiosSecure.get('/admin/tutorials');
     return data;
-  } else {
-    // Create new lesson
-    const { data } = await axiosSecure.post('/admin/lessons', lesson);
+  };
+
+  // Create/Update Tutorial
+  const saveTutorialMutation = async (tutorial) => {
+    if (tutorial._id) {
+      // Update existing tutorial
+      const { data } = await axiosSecure.put(`/admin/tutorials/${tutorial._id}`, tutorial);
+      return data;
+    } else {
+      // Create new tutorial
+      const { data } = await axiosSecure.post('/admin/tutorials', tutorial);
+      return data;
+    }
+  };
+
+  // Delete Tutorial
+  const deleteTutorialMutation = async (tutorialId) => {
+    const { data } = await axiosSecure.delete(`/admin/tutorials/${tutorialId}`);
     return data;
-  }
-};
+  };
 
-// Delete Lesson
-const deleteLessonMutation = async (lessonId) => {
-  const { data } = await axiosSecure.delete(`/admin/lessons/${lessonId}`);
-  return data;
-};
-
-  // Fetch Lessons Query
-  const { data: lessons, isLoading, error } = useQuery({
-    queryKey: ['lessons'],
-    queryFn: fetchLessons
+  // Fetch Tutorials Query
+  const { data: tutorials, isLoading, error } = useQuery({
+    queryKey: ['tutorials'],
+    queryFn: fetchTutorials
   });
 
-  // Create/Update Lesson Mutation
+  // Create/Update Tutorial Mutation
   const saveMutation = useMutation({
-    mutationFn: saveLessonMutation,
+    mutationFn: saveTutorialMutation,
     onSuccess: () => {
-      queryClient.invalidateQueries(['lessons']);
+      queryClient.invalidateQueries(['tutorials']);
       setIsDialogOpen(false);
-      setEditingLesson(null);
-      toast.success('Lesson saved!');
+      setEditingTutorial(null);
+      toast.success('Tutorial saved!');
     },
     onError: (error) => {
-        console.log(error); 
-      toast.error('Error adding lessons.');
+      console.log(error); 
+      toast.error('Error adding tutorial.');
     }
   });
 
-  // Delete Lesson Mutation
+  // Delete Tutorial Mutation
   const deleteMutation = useMutation({
-    mutationFn: deleteLessonMutation,
+    mutationFn: deleteTutorialMutation,
     onSuccess: () => {
-      queryClient.invalidateQueries(['lessons']);
-      toast.success('Lesson Deleted.');
+      queryClient.invalidateQueries(['tutorials']);
+      toast.success('Tutorial Deleted.');
     },
     onError: (error) => {
-        console.log(error)
-      toast.error("Error deleting the lesson!");
+      console.log(error);
+      toast.error("Error deleting the tutorial!");
     }
   });
 
-  const handleSaveLesson = (e) => {
+  const handleSaveTutorial = (e) => {
     e.preventDefault();
-    saveMutation.mutate(editingLesson);
+    saveMutation.mutate(editingTutorial);
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error fetching lessons</div>;
+  if (error) return <div>Error fetching tutorials</div>;
 
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Lessons Management</h1>
+        <h1 className="text-2xl font-bold">Tutorials Management</h1>
         <Button onClick={() => {
-          setEditingLesson({ name: '', lessonNumber: '' });
+          setEditingTutorial({ title: '', link: '' });
           setIsDialogOpen(true);
         }}>
-          Add New Lesson
+          Add New Tutorial
         </Button>
       </div>
 
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Lesson Name</TableHead>
-            <TableHead>Lesson Number</TableHead>
-            <TableHead>Vocabulary Count</TableHead>
+            <TableHead>Title</TableHead>
+            <TableHead>Link</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {lessons.map((lesson) => (
-            <TableRow key={lesson._id}>
-              <TableCell>{lesson.name}</TableCell>
-              <TableCell>{lesson.lessonNumber}</TableCell>
-              <TableCell>{lesson.vocabularyCount}</TableCell>
+          {tutorials.map((tutorial) => (
+            <TableRow key={tutorial._id}>
+              <TableCell>{tutorial.title}</TableCell>
+              <TableCell>
+                <a 
+                  href={tutorial.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-blue-600 hover:underline"
+                >
+                  {tutorial.link}
+                </a>
+              </TableCell>
               <TableCell>
                 <div className="flex space-x-2">
                   <Button 
                     variant="outline" 
                     size="icon"
                     onClick={() => {
-                      setEditingLesson(lesson);
+                      setEditingTutorial(tutorial);
                       setIsDialogOpen(true);
                     }}
                   >
@@ -167,13 +160,13 @@ const deleteLessonMutation = async (lessonId) => {
                       <AlertDialogHeader>
                         <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          This will permanently delete the lesson and all associated vocabulary.
+                          This will permanently delete the tutorial.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction 
-                          onClick={() => deleteMutation.mutate(lesson._id)}
+                          onClick={() => deleteMutation.mutate(tutorial._id)}
                         >
                           Delete
                         </AlertDialogAction>
@@ -187,33 +180,37 @@ const deleteLessonMutation = async (lessonId) => {
         </TableBody>
       </Table>
 
+      <>
+      {tutorials.length === 0 && <div className="text-center text-2xl font-semibold text-gray-500 mt-10">No tutorials found.</div>}
+      </>
+
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
-              {editingLesson?._id ? 'Edit Lesson' : 'Add New Lesson'}
+              {editingTutorial?._id ? 'Edit Tutorial' : 'Add New Tutorial'}
             </DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleSaveLesson} className="space-y-4">
+          <form onSubmit={handleSaveTutorial} className="space-y-4">
             <div>
-              <label>Lesson Name</label>
+              <label>Tutorial Title</label>
               <Input 
-                value={editingLesson?.name || ''}
-                onChange={(e) => setEditingLesson(prev => ({ 
+                value={editingTutorial?.title || ''}
+                onChange={(e) => setEditingTutorial(prev => ({ 
                   ...prev, 
-                  name: e.target.value 
+                  title: e.target.value 
                 }))}
                 required
               />
             </div>
             <div>
-              <label>Lesson Number</label>
+              <label>Tutorial Link</label>
               <Input 
-                type="number"
-                value={editingLesson?.lessonNumber || ''}
-                onChange={(e) => setEditingLesson(prev => ({ 
+                type="url"
+                value={editingTutorial?.link || ''}
+                onChange={(e) => setEditingTutorial(prev => ({ 
                   ...prev, 
-                  lessonNumber: parseInt(e.target.value) 
+                  link: e.target.value 
                 }))}
                 required
               />
@@ -223,7 +220,7 @@ const deleteLessonMutation = async (lessonId) => {
                 Cancel
               </Button>
               <Button type="submit">
-                {editingLesson?._id ? 'Update' : 'Create'}
+                {editingTutorial?._id ? 'Update' : 'Create'}
               </Button>
             </div>
           </form>
@@ -233,4 +230,4 @@ const deleteLessonMutation = async (lessonId) => {
   );
 };
 
-export default LessonManagement;
+export default TutorialManagement;

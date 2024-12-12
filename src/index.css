@@ -106,15 +106,33 @@
 }
 
 
+.admin .active {
+  @apply dark:bg-zinc-800 bg-zinc-300
+}
+
+
+.Nav .active{
+  background-image: linear-gradient(45deg, #E53719, rgba(135, 252, 196, 0) 14.23%, rgba(135, 252, 196, 0) 71.6%, #E62DFF);
+  padding: 5px 10px;
+  border-radius: 20px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold; 
+  min-width: 120px;
+}
+
+
+.Nav .active span{
+  z-index: 1;
+}
+
 .Nav .active::after {
   content: '';
-  @apply absolute bg-white w-[95%] h-[90%] left-[2.5%] top-[5%] rounded-[20px] text-[#000];
+  @apply absolute bg-white w-[98%] h-[90%] left-[1.5%] top-[5%] rounded-[20px] text-[#000];
 }
 
  .dark .Nav .active::after {
   @apply bg-gray-950;
-}
-
-.admin .active {
-  @apply dark:bg-zinc-800 bg-zinc-300
-}
+ }

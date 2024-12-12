@@ -5,14 +5,20 @@ import App from "./App.jsx";
 import { ThemeProvider } from "./providers/ThemeProvider";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import ReactQueryProvider from "./providers/ReactQueryProvider";
+import AuthProvider from "./providers/AuthProvider";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+        <ReactQueryProvider>
+        <AuthProvider>
     <ThemeProvider>
       <Toaster/>
       <BrowserRouter>
         <App />
       </BrowserRouter>
     </ThemeProvider>
+    </AuthProvider>
+    </ReactQueryProvider>
   </StrictMode>
 );

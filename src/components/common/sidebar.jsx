@@ -1,4 +1,4 @@
-import { BookOpen, FileCog, FileSliders,GalleryVerticalEnd,Plus, PlusCircle, Users } from "lucide-react"
+import { BookOpen, FileSliders,GalleryVerticalEnd,Plus, PlusCircle, SquarePlay, Users } from "lucide-react"
 
 import {
   Sidebar,
@@ -19,14 +19,24 @@ import useAuth from "@/hooks/useAuth"
 // Menu items.
 const items = [
   {
-    title: "Lessons",
-    url: "lessons",
+    title: "Dashboard",
+    url: "/",
+    icon: GalleryVerticalEnd,
+  },
+  {
+    title: "Lesson Management",
+    url: "lesson-management",
     icon: BookOpen,
   },
   {
     title: "Add Lessons",
     url: "add-lessons",
     icon: Plus,
+  },
+  {
+    title: "Vocabulary Management",
+    url: "vocabulary-management",
+    icon: FileSliders ,
   },
   {
     title: "Add Vocabularies",
@@ -38,15 +48,11 @@ const items = [
     url: "manage-users",
     icon: Users,
   },
+  //tutorial management
   {
-    title: "Lesson Management",
-    url: "lesson-management",
-    icon: FileCog ,
-  },
-  {
-    title: "Vocabulary Management",
-    url: "vocabulary-management",
-    icon: FileSliders ,
+    title: "Tutorial Management",
+    url: "tutorial-management",
+    icon: SquarePlay,
   },
 ]
 

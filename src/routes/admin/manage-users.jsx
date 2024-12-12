@@ -27,7 +27,7 @@ import {
   AlertDialogTitle, 
   AlertDialogTrigger 
 } from "@/components/ui/alert-dialog";
-import { UserCog, Trash2 } from 'lucide-react';
+import { UserCog, Trash2, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import useAxiosSecure from '@/hooks/useAxiosSecure';
 
@@ -101,6 +101,7 @@ const ManageUsers = () => {
   if (isLoading) return <div>Loading users...</div>;
   if (error) return <div>Error fetching users</div>;
 
+  console.log(users)
   return (
     <div className="p-4">
       <div className="mb-4">
@@ -110,6 +111,7 @@ const ManageUsers = () => {
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead></TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Role</TableHead>
@@ -120,6 +122,7 @@ const ManageUsers = () => {
         <TableBody>
           {users.map((user) => (
             <TableRow key={user._id}>
+              <TableCell><img className='rounded-sm lg:h-8' src={user.avatar} alt={user.name}/></TableCell>
               <TableCell>{user.name}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>
@@ -189,16 +192,30 @@ const ManageUsers = () => {
               <p>Current Role: <strong>{selectedUser?.role}</strong></p>
             </div>
             <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setIsRoleDialogOpen(false)}>
+              <Button 
+                variant="outline" 
+                onClick={() => setIsRoleDialogOpen(false)} 
+                disabled={updateRoleMutation.isPending}
+              >
                 Cancel
               </Button>
               <Button 
                 onClick={handleUpdateRole}
+                disabled={updateRoleMutation.isPending}
                 variant={selectedUser?.role === 'admin' ? 'destructive' : 'default'}
               >
-                {selectedUser?.role === 'admin' 
-                  ? 'Demote to User' 
-                  : 'Promote to Admin'}
+                {updateRoleMutation.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {selectedUser?.role === 'admin' 
+                      ? 'Demoting...' 
+                      : 'Promoting...'}
+                  </>
+                ) : (
+                  selectedUser?.role === 'admin' 
+                    ? 'Demote to User' 
+                    : 'Promote to Admin'
+                )}
               </Button>
             </div>
           </div>
