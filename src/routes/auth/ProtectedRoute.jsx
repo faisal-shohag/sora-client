@@ -1,25 +1,28 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import useAuth from '@/hooks/useAuth';
+import ProgressWindow from '@/components/common/progress-window';
+import PropTypes from 'prop-types';
+
+
 
 const ProtectedRoute = ({ allowedRoles, children }) => {
   const { user, loading } = useAuth();
 
-  // Show a loading state while authentication is being checked
+  
   if (loading) {
-    return <div>Loading...</div>;
+    return <ProgressWindow progressbar={<progress className="progress w-56"></progress>}/>
   }
 
-  // If no user is logged in, redirect to login
+ 
   if (!user) {
     return <Navigate to="/login" replace />;
   }
 
-  // If roles are specified, check if user's role is allowed
+  
   if (allowedRoles && allowedRoles.length > 0) {
     const hasAllowedRole = allowedRoles.includes(user.role);
     
     if (!hasAllowedRole) {
-      // Specific navigation based on user role
       if (user.role === 'user') {
         return <Navigate to="/lessons" replace />;
       }
@@ -45,8 +48,14 @@ const ProtectedRoute = ({ allowedRoles, children }) => {
   
   
 
-  // If all checks pass, render children or Outlet
   return children ? <>{children}</> : <Outlet />;
 };
+
+ProtectedRoute.propTypes = {
+  allowedRoles: PropTypes.arrayOf(PropTypes.string),
+  children: PropTypes.node,
+};
+
+
 
 export default ProtectedRoute;

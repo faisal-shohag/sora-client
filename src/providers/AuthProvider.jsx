@@ -3,6 +3,9 @@ import useAxiosSecure from '@/hooks/useAxiosSecure';
 import toast from 'react-hot-toast';
 
 export const AuthContext = createContext();
+import PropTypes from 'prop-types';
+
+
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null); 
@@ -28,7 +31,6 @@ const AuthProvider = ({ children }) => {
 
   const signup = async (name, email, password, avatar) => {
     console.log({name, email, password, avatar});
-    console.log("Signup called");
     try {
       const response = await axiosSecure.post('/auth/signup', {
         name,
@@ -89,6 +91,10 @@ const AuthProvider = ({ children }) => {
       {!loading && children}
     </AuthContext.Provider>
   );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node,
 };
 
 export default AuthProvider;

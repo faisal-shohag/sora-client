@@ -14,6 +14,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import PropTypes from 'prop-types';
+
+
 export function NavUser({ user, logout }) {
   const { isMobile } = useSidebar();
   return (
@@ -65,3 +68,8 @@ export function NavUser({ user, logout }) {
     </SidebarMenu>
   );
 }
+
+NavUser.propTypes = {
+  user: PropTypes.object,
+  logout: PropTypes.func,
+};
