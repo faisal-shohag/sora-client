@@ -1,72 +1,97 @@
-import { createContext, useState, useEffect } from 'react';
-import useAxiosSecure from '@/hooks/useAxiosSecure';
-import toast from 'react-hot-toast';
+import { createContext, useState, useEffect } from "react";
+import useAxiosSecure from "@/hooks/useAxiosSecure";
+import toast from "react-hot-toast";
 
 export const AuthContext = createContext();
-import PropTypes from 'prop-types';
-
-
+import PropTypes from "prop-types";
+import ProgressWindow from "@/components/common/progress-window";
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); 
-  const [loading, setLoading] = useState(true); 
-  const axiosSecure = useAxiosSecure()
-  
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const axiosSecure = useAxiosSecure();
+
   const login = async (email, password) => {
     toast.loading("Loging in...", { id: "login" });
     try {
-      const response = await axiosSecure.post(`/auth/login`, { email, password });
+      const response = await axiosSecure.post(`/auth/login`, {
+        email,
+        password,
+      });
       setUser(user);
-      toast.success(response.data?.message || "Logged in successfully", { id: "login" });
+      toast.success(response.data?.message || "Logged in successfully", {
+        id: "login",
+      });
       setTimeout(() => {
-        window.location.reload()
+        window.location.reload();
       }, 1200);
     } catch (error) {
-        toast.error(error.response?.data?.error || "Login failed", { id: "login" });
-      console.error('Login error:', error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.error || "Login failed", {
+        id: "login",
+      });
+      console.error(
+        "Login error:",
+        error.response?.data?.message || error.message
+      );
       throw error;
     }
   };
 
-
   const signup = async (name, email, password, avatar) => {
-    console.log({name, email, password, avatar});
+    console.log({ name, email, password, avatar });
     try {
-      const response = await axiosSecure.post('/auth/signup', {
+      const response = await axiosSecure.post("/auth/signup", {
         name,
         email,
         password,
         avatar,
       });
       setUser(user);
-      toast.success(response.data?.message || "Signed up successfully", { id: "signup" });
+      toast.success(response.data?.message || "Signed up successfully", {
+        id: "signup",
+      });
       setTimeout(() => {
-        window.location.reload()
+        window.location.reload();
       }, 1200);
     } catch (error) {
-        toast.error(error.response?.data?.error || "Signup failed", { id: "signup" });
-      console.error('Registration error:', error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.error || "Signup failed", {
+        id: "signup",
+      });
+      console.error(
+        "Registration error:",
+        error.response?.data?.message || error.message
+      );
       throw error;
     }
   };
 
   const logout = () => {
-    axiosSecure.post('/auth/logout')
-    .then(() => {
-      setUser(null);
-    })
-    .catch(error => {
-      console.error('Logout error:', error.response?.data?.message || error.message);
-    });
+    axiosSecure
+      .post("/auth/logout")
+      .then(() => {
+        setUser(null);
+      })
+      .catch((error) => {
+        console.error(
+          "Logout error:",
+          error.response?.data?.message || error.message
+        );
+      });
   };
 
   const fetchCurrentUser = async () => {
+    setLoading(true);
     try {
-      const response = await axiosSecure.get('/user');
+      const response = await axiosSecure.get("/user");
       setUser(response.data.user);
+      setLoading(false);
     } catch (error) {
-      console.error('Error fetching user:', error.response?.data?.message || error.message);
+      console.error(
+        "Error fetching user:",
+        error.response?.data?.message || error.message
+      );
       logout();
+      setLoading(false);
     } finally {
       setLoading(false);
     }
@@ -76,7 +101,13 @@ const AuthProvider = ({ children }) => {
     fetchCurrentUser();
   }, []);
 
-
+  if (loading) {
+    return (
+      <ProgressWindow
+        progressbar={<progress className="progress w-56 h-full"></progress>}
+      />
+    );
+  }
 
   return (
     <AuthContext.Provider

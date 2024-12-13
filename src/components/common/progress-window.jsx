@@ -5,7 +5,8 @@ const ProgressWindow = ({progressbar}) => {
     <div>
       <div className="flex flex-col items-center justify-center h-svh">
       <h1 className='text-4xl font-bold text-center'>~<span className='text-red-500'>日本</span>~ Learn</h1>
-        <center>{progressbar}</center>
+        <div className='font-semibold'> A Japanese Vocabulary Learning Application</div>
+        <div className='mt-2 rounded-full overflow-hidden'>{progressbar}</div>
         <div>Please wait...</div>
       </div>
     </div>
